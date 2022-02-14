@@ -40,10 +40,7 @@ app.use(async function (req, res, next) {
     let ip = requestIp.getClientIp(req)
     let log = new Log({ typeReq: typeReq, ip: ip, date: date });
     // save model to database
-    log.save(function (err, log) {
-      if (err) return console.error(err);
-      console.log(log + " saved to log collection.");
-    });
+    await log.save();
     let numLogs = rateLimit(req);
     if (numLogs >= 10) {
       let now = new Date();
@@ -60,7 +57,8 @@ app.use(async function (req, res, next) {
       next()
     }
   } catch (error) {
-    res.send('not valid!!!')
+    console.log("not saved in logs " + error);
+    next();
   }
 })
 async function rateLimit(req) {

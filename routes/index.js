@@ -80,8 +80,9 @@ router.get('/', async (req, res) => {
 //---ex1
 
 router.get('/getAvgAgeHasNoProfession', async (req, res) => {
-    let persons = await Person.find({ profession: null });
-    let avg = await persons.aggregate([
+    // let persons = await Person.find({ profession: null });
+    let avg = await Person.aggregate([
+        { "$match": { profession: null } },
         {
             "$group": {
                 "_id": null,
@@ -105,13 +106,7 @@ router.get('/getMaxSalaryProfession', async (req, res) => {
 
 
 
-// router.get('/getAvgHasNoProfessio', async (req, res) => {
-//     let professionMaxSalary = await Profession.findOne({ $max: '$salary' });
-//     // let numPersons = await Person.find({ profession: professionMaxSalary._id }).length;
-//     // return res.json({ code: 200, data: { professionMaxSalary, numPersons } });
-//     return res.json({ code: 200, data: { professionMaxSalary } });
 
-// })
 //---ex3
 
 router.get('/get5Proffession', async (req, res) => {
@@ -128,12 +123,11 @@ router.get('/getDistinctAge', async (req, res) => {
 //---ex5
 
 router.patch('/updateSalary', async (req, res) => {
-    var t = req.method;
     let person = await Person.findOne({ name: req.body.name })
     let profession;
     if (person.profession != null) {
         profession = await Profession.findByIdAndUpdate(person.profession, { salary: req.body.salary }, { new: true })
-        return res.json({ code: 200, data: { person, profession, t } });
+        return res.json({ code: 200, data: { person, profession } });
     }
     else {
         return res.json({ code: 200, data: "not have profession" });
