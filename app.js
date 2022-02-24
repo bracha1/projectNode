@@ -70,6 +70,7 @@ async function rateLimit(req) {
   let numLogs = logs.length;
   return numLogs;
 }
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
